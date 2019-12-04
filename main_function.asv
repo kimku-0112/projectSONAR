@@ -1,0 +1,61 @@
+function  main_function( )
+
+% making the channels. 
+[channel_in, channel_out] = ged_audio_channels();
+
+
+
+%_____________________SETTING THE PARAMETERS______________________
+
+N = 44100;								%no of sample taken per trigger
+duration=1.0; 							% duration of recording in second
+SampleRate=44100; 						%sampling rate of recording
+set([channel_in channel_out], 'SampleRate', SampleRate); %setting up sample rate for both the input and output
+set(channel_in,'SamplesPerTrigger',N)    %input is taken after the trigger
+sound_velocity = 343; 					%velocity of sound at room temperature metre/second. 
+
+
+
+
+
+%% setting the input and output audio channels with appropriate sound data. 
+played = sound_beep(SampleRate);
+%set the audio data in the output channel. 
+putdata(channel_out,played);
+
+
+%% Start playing and recording of the sound simultaneusly.  
+start([channel_in channel_out]);
+
+%% collecting the recorded data from the input audio channe. 
+received = getdata(channel_in);
+
+
+
+
+%
+% Processing the data in order to find the delay and then finding the 
+% distance of the target from the source. 
+%
+result = process_data( played, received, SampleRate , sound_velocity);
+
+%
+% Printing the final result
+%
+disp(strcat('The distance of the target from the soruce is : ' , num2str(result)));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+end
